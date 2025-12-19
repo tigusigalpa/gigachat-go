@@ -1,10 +1,13 @@
 # 🚀 GigaChat Go SDK
 
+![GigaChat Golang SDK](https://github.com/user-attachments/assets/5cc6724d-fd74-4908-ba5d-4e473bd6e885)
+
 ![Go Version](https://img.shields.io/badge/Go-1.21+-00ADD8?style=flat-square&logo=go)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/tigusigalpa/gigachat-go?style=flat-square)](https://goreportcard.com/report/github.com/tigusigalpa/gigachat-go)
 
-Full-featured Go SDK for Sber GigaChat API integration. Simple, powerful, and idiomatic Go client for working with GigaChat AI models, including streaming support and image generation.
+Full-featured Go SDK for Sber GigaChat API integration. Simple, powerful, and idiomatic Go client for working with
+GigaChat AI models, including streaming support and image generation.
 
 **🌐 Language:** English | [Русский](README-ru.md)
 
@@ -39,7 +42,8 @@ To work with GigaChat API, you need to obtain authorization credentials:
 2. Create a project and get **Client ID** and **Client Secret**
 3. Generate **Authorization Key** (Base64 of "Client ID:Client Secret")
 
-> 💡 **Detailed Instructions**: [Creating a Project and Getting Keys](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-create-project)
+> 💡 **Detailed Instructions
+**: [Creating a Project and Getting Keys](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-create-project)
 
 ### 2. Environment Setup
 
@@ -216,22 +220,23 @@ fmt.Printf("Tokens used: %d\n", response.Usage.TotalTokens)
 
 ## 🤖 Available Models
 
-GigaChat supports several models for different tasks. The current list of models is available in the [official documentation](https://developers.sber.ru/docs/ru/gigachat/models).
+GigaChat supports several models for different tasks. The current list of models is available in
+the [official documentation](https://developers.sber.ru/docs/ru/gigachat/models).
 
 ### Text Generation Models
 
-| Model | Description | Use Cases |
-|-------|-------------|-----------|
-| **GigaChat-2** | Base second-generation model | General tasks, dialogues |
+| Model              | Description                               | Use Cases                       |
+|--------------------|-------------------------------------------|---------------------------------|
+| **GigaChat-2**     | Base second-generation model              | General tasks, dialogues        |
 | **GigaChat-2-Pro** | Advanced model with improved capabilities | Complex tasks, creative writing |
-| **GigaChat-2-Max** | Maximum model for the most complex tasks | Professional tasks, analysis |
+| **GigaChat-2-Max** | Maximum model for the most complex tasks  | Professional tasks, analysis    |
 
 ### Embedding Models
 
-| Model | Description | Use Cases |
-|-------|-------------|-----------|
-| **Embeddings** | Base model for vector representation | Semantic search, clustering |
-| **EmbeddingsGigaR** | Improved model for embeddings | Accurate search, semantic analysis |
+| Model               | Description                          | Use Cases                          |
+|---------------------|--------------------------------------|------------------------------------|
+| **Embeddings**      | Base model for vector representation | Semantic search, clustering        |
+| **EmbeddingsGigaR** | Improved model for embeddings        | Accurate search, semantic analysis |
 
 ### Using Model Constants
 
@@ -270,7 +275,8 @@ response, err := client.Chat(
 
 ## 🎨 Image Generation
 
-GigaChat supports image generation using the built-in text2image function. To create images, use the verb "нарисуй" (draw) in the prompt and the `function_call: auto` parameter.
+GigaChat supports image generation using the built-in text2image function. To create images, use the verb "нарисуй" (
+draw) in the prompt and the `function_call: auto` parameter.
 
 ### Basic Usage
 
@@ -340,11 +346,11 @@ os.WriteFile("city.jpg", decodedData, 0644)
 
 ### Available Image Methods
 
-| Method | Description | Returns |
-|--------|-------------|---------|
-| `GenerateImage(prompt, options...)` | Generates image and returns API response | `*ChatResponse` |
-| `DownloadImage(fileID)` | Downloads image by ID | `string` (base64) |
-| `CreateImage(prompt, options...)` | Generates and downloads image in one call | `*ImageResult` |
+| Method                              | Description                               | Returns           |
+|-------------------------------------|-------------------------------------------|-------------------|
+| `GenerateImage(prompt, options...)` | Generates image and returns API response  | `*ChatResponse`   |
+| `DownloadImage(fileID)`             | Downloads image by ID                     | `string` (base64) |
+| `CreateImage(prompt, options...)`   | Generates and downloads image in one call | `*ImageResult`    |
 
 ### Image Generation Options
 
@@ -398,7 +404,9 @@ client.CreateImage(
 )
 ```
 
-> **Important**: For image generation, the prompt must contain the verb "нарисуй" (draw) or similar drawing commands. The API automatically determines the need to call the text2image function when the `function_call: auto` parameter is present.
+> **Important**: For image generation, the prompt must contain the verb "нарисуй" (draw) or similar drawing commands.
+> The API automatically determines the need to call the text2image function when the `function_call: auto` parameter is
+> present.
 
 ## ⚠️ Error Handling
 
@@ -428,48 +436,49 @@ if err != nil {
 
 #### 🔐 Authentication Errors (400-401)
 
-| Code | HTTP | Description | Solution |
-|------|------|-------------|----------|
-| 1 | 400 | `scope data format invalid` | Check scope field format |
-| 4 | 401 | `Can't decode 'Authorization' header` | Check authorization key correctness |
-| 5 | 400 | `scope is empty` | Specify scope: `GIGACHAT_API_PERS`, `GIGACHAT_API_B2B`, or `GIGACHAT_API_CORP` |
-| 6 | 401 | `credentials doesn't match db data` | Reissue authorization key in personal account |
-| 7 | 401 | `scope from db not fully includes consumed scope` | Specify correct API version in scope |
+| Code | HTTP | Description                                       | Solution                                                                       |
+|------|------|---------------------------------------------------|--------------------------------------------------------------------------------|
+| 1    | 400  | `scope data format invalid`                       | Check scope field format                                                       |
+| 4    | 401  | `Can't decode 'Authorization' header`             | Check authorization key correctness                                            |
+| 5    | 400  | `scope is empty`                                  | Specify scope: `GIGACHAT_API_PERS`, `GIGACHAT_API_B2B`, or `GIGACHAT_API_CORP` |
+| 6    | 401  | `credentials doesn't match db data`               | Reissue authorization key in personal account                                  |
+| 7    | 401  | `scope from db not fully includes consumed scope` | Specify correct API version in scope                                           |
 
 #### 💳 Limit and Access Errors (402-403)
 
-| HTTP | Description | Cause | Solution |
-|------|-------------|-------|----------|
-| 402 | `Payment Required` | Model tokens exhausted | Check token limit in personal account |
-| 403 | `Permission denied` | No access to method | Check tariff plan |
+| HTTP | Description         | Cause                  | Solution                              |
+|------|---------------------|------------------------|---------------------------------------|
+| 402  | `Payment Required`  | Model tokens exhausted | Check token limit in personal account |
+| 403  | `Permission denied` | No access to method    | Check tariff plan                     |
 
 #### 📊 Data Size Errors (413)
 
-| HTTP | Description | Cause | Solution |
-|------|-------------|-------|----------|
-| 413 | `Payload too large` | Input data size exceeded | Reduce prompt or file size |
+| HTTP | Description         | Cause                    | Solution                   |
+|------|---------------------|--------------------------|----------------------------|
+| 413  | `Payload too large` | Input data size exceeded | Reduce prompt or file size |
 
 #### ⚙️ Parameter Errors (422)
 
-| HTTP | Description | Cause | Solution |
-|------|-------------|-------|----------|
-| 422 | `Requested model does not support functions` | Model doesn't support functions | Use different model or disable functions |
-| 422 | `system message must be the first message` | Incorrect message order | System message must be first |
-| 422 | `Unprocessable Entity` | File exceeds context size | Split or reduce file |
+| HTTP | Description                                  | Cause                           | Solution                                 |
+|------|----------------------------------------------|---------------------------------|------------------------------------------|
+| 422  | `Requested model does not support functions` | Model doesn't support functions | Use different model or disable functions |
+| 422  | `system message must be the first message`   | Incorrect message order         | System message must be first             |
+| 422  | `Unprocessable Entity`                       | File exceeds context size       | Split or reduce file                     |
 
 #### 🚦 Request Limit Errors (429)
 
-| HTTP | Description | Cause | Solution |
-|------|-------------|-------|----------|
-| 429 | `Too Many Requests` | Concurrent request limit exceeded | Reduce request frequency, add delays |
+| HTTP | Description         | Cause                             | Solution                             |
+|------|---------------------|-----------------------------------|--------------------------------------|
+| 429  | `Too Many Requests` | Concurrent request limit exceeded | Reduce request frequency, add delays |
 
 #### 🔧 Server Errors (500)
 
-| HTTP | Description | Cause | Solution |
-|------|-------------|-------|----------|
-| 500 | `Internal Server Error` | GigaChat service error | Contact support |
+| HTTP | Description             | Cause                  | Solution        |
+|------|-------------------------|------------------------|-----------------|
+| 500  | `Internal Server Error` | GigaChat service error | Contact support |
 
-> 📖 **More about errors**: [Official GigaChat API Documentation](https://developers.sber.ru/docs/ru/gigachat/api/errors-description)
+> 📖 **More about errors
+**: [Official GigaChat API Documentation](https://developers.sber.ru/docs/ru/gigachat/api/errors-description)
 
 ## 📚 Examples
 
@@ -570,7 +579,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📊 Project Status
 
-This project is actively maintained. If you encounter any issues or have suggestions, please [open an issue](https://github.com/tigusigalpa/gigachat-go/issues).
+This project is actively maintained. If you encounter any issues or have suggestions,
+please [open an issue](https://github.com/tigusigalpa/gigachat-go/issues).
 
 ---
 
