@@ -11,6 +11,8 @@ GigaChat AI models, including streaming support and image generation.
 
 **🌐 Language:** English | [Русский](README-ru.md)
 
+**📦 Package:** [pkg.go.dev/github.com/tigusigalpa/gigachat-go](https://pkg.go.dev/github.com/tigusigalpa/gigachat-go)
+
 ## ✨ Features
 
 - 🔌 **Simple Integration** with GigaChat API

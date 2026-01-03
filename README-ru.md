@@ -11,6 +11,8 @@
 
 **🌐 Язык:** [English](README.md) | Русский
 
+**📦 Пакет:** [pkg.go.dev/github.com/tigusigalpa/gigachat-go](https://pkg.go.dev/github.com/tigusigalpa/gigachat-go)
+
 ## ✨ Возможности
 
 - 🔌 **Простая интеграция** с GigaChat API
