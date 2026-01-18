@@ -68,7 +68,7 @@ func WithInsecureSkipVerify(skip bool) TokenManagerOption {
 	}
 }
 
-func WithHTTPClient(client *http.Client) TokenManagerOption {
+func WithTokenManagerHTTPClient(client *http.Client) TokenManagerOption {
 	return func(tm *TokenManager) {
 		tm.client = client
 	}
