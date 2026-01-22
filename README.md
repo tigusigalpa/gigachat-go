@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/tigusigalpa/gigachat-go?style=flat-square)](https://goreportcard.com/report/github.com/tigusigalpa/gigachat-go)
 
-Полнофункциональный Go SDK для работы с Sber GigaChat API. Простой, мощный и идиоматичный Go-клиент для работы с AI
+Полнофункциональный Golang SDK для работы с Sber GigaChat API. Простой, мощный и идиоматичный Go-клиент для работы с AI
 моделями GigaChat, включая поддержку streaming и генерации изображений.
 
 **🌐 Язык:** [English](README-en.md) | Русский
