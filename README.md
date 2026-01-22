@@ -6,66 +6,67 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/tigusigalpa/gigachat-go?style=flat-square)](https://goreportcard.com/report/github.com/tigusigalpa/gigachat-go)
 
-Full-featured Go SDK for Sber GigaChat API integration. Simple, powerful, and idiomatic Go client for working with
-GigaChat AI models, including streaming support and image generation.
+Полнофункциональный Go SDK для работы с Sber GigaChat API. Простой, мощный и идиоматичный Go-клиент для работы с AI
+моделями GigaChat, включая поддержку streaming и генерации изображений.
 
-**🌐 Language:** English | [Русский](README-ru.md)
+**🌐 Язык:** [English](README-en.md) | Русский
 
-**📦 Package:** [pkg.go.dev/github.com/tigusigalpa/gigachat-go](https://pkg.go.dev/github.com/tigusigalpa/gigachat-go)
+**📦 Пакет:** [pkg.go.dev/github.com/tigusigalpa/gigachat-go](https://pkg.go.dev/github.com/tigusigalpa/gigachat-go)
 
-## ✨ Features
+## ✨ Возможности
 
-- 🔌 **Simple Integration** with GigaChat API
-- 🔐 **Automatic OAuth & Token Management** with thread-safe caching
-- 🎯 **Support for All Models** (GigaChat-2, GigaChat-2-Pro, GigaChat-2-Max)
-- 📝 **Conversation Support** with context management
-- ⚡ **Streaming Support** for real-time responses
-- 🎨 **Image Generation** with text2image function
-- 🖼️ **Automatic Image Download** and base64 encoding
-- 🎭 **Image Styling** via system prompts
-- 🔧 **Functional Options Pattern** for clean API
-- 🧪 **Comprehensive Examples** for all features
-- 📚 **Full Documentation** with code samples
-- 🛡️ **Type-Safe** with proper error handling
+- 🔌 **Простая интеграция** с GigaChat API
+- 🔐 **Автоматическое управление OAuth и токенами** с потокобезопасным кешированием
+- 🎯 **Поддержка всех моделей** (GigaChat-2, GigaChat-2-Pro, GigaChat-2-Max)
+- 📝 **Поддержка диалогов** с управлением контекстом
+- ⚡ **Streaming поддержка** для ответов в реальном времени
+- 🎨 **Генерация изображений** с помощью функции text2image
+- 🖼️ **Автоматическое скачивание изображений** и кодирование в base64
+- 🎭 **Стилизация изображений** через системные промпты
+- 🔧 **Паттерн функциональных опций** для чистого API
+- 🧪 **Полные примеры** для всех функций
+- 📚 **Полная документация** с примерами кода
+- 🛡️ **Типобезопасность** с правильной обработкой ошибок
 
-## 📦 Installation
+## 📦 Установка
 
 ```bash
 go get github.com/tigusigalpa/gigachat-go
 ```
 
-## ⚙️ Configuration
+## ⚙️ Настройка
 
-### 1. Getting Authorization Credentials
+### 1. Получение авторизационных данных
 
-To work with GigaChat API, you need to obtain authorization credentials:
+Для работы с GigaChat API необходимо получить авторизационные данные:
 
-1. Register at [Sber AI Personal Account](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-create-project)
-2. Create a project and get **Client ID** and **Client Secret**
-3. Generate **Authorization Key** (Base64 of "Client ID:Client Secret")
+1. Зарегистрируйтесь
+   в [личном кабинете Sber AI](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-create-project)
+2. Создайте проект и получите **Client ID** и **Client Secret**
+3. Сгенерируйте **Authorization Key** (Base64 от "Client ID:Client Secret")
 
-> 💡 **Detailed Instructions
-**: [Creating a Project and Getting Keys](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-create-project)
+> 💡 **Подробная инструкция
+**: [Создание проекта и получение ключей](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-create-project)
 
-### 2. Environment Setup
+### 2. Настройка окружения
 
-Set up your environment variables:
+Настройте переменные окружения:
 
 ```bash
-# Method 1: Using ready Authorization Key
+# Способ 1: Используя готовый Authorization Key
 export GIGACHAT_AUTH_KEY=your_base64_encoded_auth_key
 
-# Method 2: Using Client ID and Client Secret (will auto-generate auth_key)
+# Способ 2: Используя Client ID и Client Secret (автоматически сгенерирует auth_key)
 export GIGACHAT_CLIENT_ID=your_client_id
 export GIGACHAT_CLIENT_SECRET=your_client_secret
 
-# Optional settings
+# Дополнительные настройки
 export GIGACHAT_SCOPE=GIGACHAT_API_PERS
 ```
 
-## 💡 Usage
+## 💡 Использование
 
-### Basic Usage
+### Базовое использование
 
 ```go
 package main
@@ -80,34 +81,34 @@ import (
 )
 
 func main() {
-    // Create auth key from credentials
+    // Создание ключа авторизации из учетных данных
     authKey := base64.StdEncoding.EncodeToString(
         []byte(os.Getenv("GIGACHAT_CLIENT_ID") + ":" + os.Getenv("GIGACHAT_CLIENT_SECRET")),
     )
 
-    // Or use pre-encoded key
+    // Или использование готового ключа
     // authKey := os.Getenv("GIGACHAT_AUTH_KEY")
 
-    // Create token manager
+    // Создание менеджера токенов
     tokenManager := gigachat.NewTokenManager(authKey)
 
-    // Create client
+    // Создание клиента
     client := gigachat.NewClient(tokenManager)
 
-    // Get available models
+    // Получение доступных моделей
     models, err := client.Models()
     if err != nil {
         log.Fatal(err)
     }
 
-    fmt.Println("Available models:")
+    fmt.Println("Доступные модели:")
     for _, model := range models.Data {
         fmt.Printf("- %s\n", model.ID)
     }
 
-    // Send a message
+    // Отправка сообщения
     messages := []gigachat.Message{
-        {Role: "user", Content: "Hello! Tell me a joke"},
+        {Role: "user", Content: "Привет! Расскажи анекдот"},
     }
 
     response, err := client.Chat(messages)
@@ -119,13 +120,13 @@ func main() {
 }
 ```
 
-### Working with Conversations
+### Работа с диалогами
 
 ```go
-// Create conversation with system prompt
+// Создание диалога с системным промптом
 conversation := gigachat.Conversation(
-    "You are a helpful Go programming assistant",
-    "How do I create a REST API in Go?",
+    "Ты полезный помощник программиста на Go",
+    "Как создать REST API в Go?",
 )
 
 response, err := client.Chat(conversation)
@@ -133,41 +134,41 @@ if err != nil {
     log.Fatal(err)
 }
 
-fmt.Println("Assistant:", gigachat.ExtractContent(response))
+fmt.Println("Ассистент:", gigachat.ExtractContent(response))
 
-// Continue the conversation
+// Продолжение диалога
 conversation = append(conversation, gigachat.Message{
     Role:    "assistant",
     Content: response.Choices[0].Message.Content,
 })
 
-conversation = gigachat.ContinueChat(conversation, "How do I add authentication middleware?")
+conversation = gigachat.ContinueChat(conversation, "А как добавить middleware для аутентификации?")
 
 response, err = client.Chat(conversation)
 if err != nil {
     log.Fatal(err)
 }
 
-fmt.Println("Assistant:", gigachat.ExtractContent(response))
+fmt.Println("Ассистент:", gigachat.ExtractContent(response))
 ```
 
-### Streaming Requests
+### Streaming запросы
 
 ```go
 messages := []gigachat.Message{
-    {Role: "user", Content: "Write a long story about space"},
+    {Role: "user", Content: "Напиши длинную историю о космосе"},
 }
 
-fmt.Println("Streaming response:")
+fmt.Println("Потоковый ответ:")
 
 err := client.ChatStream(messages, func(event *gigachat.ChatResponse, done bool, err error) {
     if err != nil {
-        log.Printf("Error: %v", err)
+        log.Printf("Ошибка: %v", err)
         return
     }
 
     if done {
-        fmt.Println("\n✅ Done!")
+        fmt.Println("\n✅ Готово!")
         return
     }
 
@@ -181,27 +182,27 @@ if err != nil {
 }
 ```
 
-### Advanced Usage with Options
+### Продвинутое использование с опциями
 
 ```go
-// Configure token manager
+// Настройка менеджера токенов
 tokenManager := gigachat.NewTokenManager(
     authKey,
     gigachat.WithScope("GIGACHAT_API_PERS"),
-    gigachat.WithInsecureSkipVerify(false), // Set to true to skip SSL verification
+    gigachat.WithInsecureSkipVerify(false), // Установите true для отключения проверки SSL
 )
 
-// Configure client
+// Настройка клиента
 client := gigachat.NewClient(
     tokenManager,
     gigachat.WithDefaultModel(gigachat.GigaChat2Pro),
     gigachat.WithBaseURI("https://gigachat.devices.sberbank.ru"),
 )
 
-// Send message with options
+// Отправка сообщения с опциями
 messages := []gigachat.Message{
-    {Role: "system", Content: "You are a quantum physics expert"},
-    {Role: "user", Content: "Explain quantum superposition in simple terms"},
+    {Role: "system", Content: "Ты эксперт по квантовой физике"},
+    {Role: "user", Content: "Объясни квантовую суперпозицию простыми словами"},
 }
 
 response, err := client.Chat(
@@ -217,81 +218,81 @@ if err != nil {
 }
 
 fmt.Println(response.Choices[0].Message.Content)
-fmt.Printf("Tokens used: %d\n", response.Usage.TotalTokens)
+fmt.Printf("Использовано токенов: %d\n", response.Usage.TotalTokens)
 ```
 
-## 🤖 Available Models
+## 🤖 Доступные модели
 
-GigaChat supports several models for different tasks. The current list of models is available in
-the [official documentation](https://developers.sber.ru/docs/ru/gigachat/models).
+GigaChat поддерживает несколько моделей для различных задач. Актуальный список моделей доступен
+в [официальной документации](https://developers.sber.ru/docs/ru/gigachat/models).
 
-### Text Generation Models
+### Модели для генерации текста
 
-| Model              | Description                               | Use Cases                       |
-|--------------------|-------------------------------------------|---------------------------------|
-| **GigaChat-2**     | Base second-generation model              | General tasks, dialogues        |
-| **GigaChat-2-Pro** | Advanced model with improved capabilities | Complex tasks, creative writing |
-| **GigaChat-2-Max** | Maximum model for the most complex tasks  | Professional tasks, analysis    |
+| Модель             | Описание                                       | Использование                     |
+|--------------------|------------------------------------------------|-----------------------------------|
+| **GigaChat-2**     | Базовая модель второго поколения               | Общие задачи, диалоги             |
+| **GigaChat-2-Pro** | Продвинутая модель с улучшенными возможностями | Сложные задачи, креативное письмо |
+| **GigaChat-2-Max** | Максимальная модель для самых сложных задач    | Профессиональные задачи, анализ   |
 
-### Embedding Models
+### Модели для эмбеддингов
 
-| Model               | Description                          | Use Cases                          |
-|---------------------|--------------------------------------|------------------------------------|
-| **Embeddings**      | Base model for vector representation | Semantic search, clustering        |
-| **EmbeddingsGigaR** | Improved model for embeddings        | Accurate search, semantic analysis |
+| Модель              | Описание                                    | Использование                      |
+|---------------------|---------------------------------------------|------------------------------------|
+| **Embeddings**      | Базовая модель для векторного представления | Поиск по смыслу, кластеризация     |
+| **EmbeddingsGigaR** | Улучшенная модель для создания эмбеддингов  | Точный поиск, семантический анализ |
 
-### Using Model Constants
+### Использование констант моделей
 
 ```go
-// Use constants for generation
+// Использование констант для генерации
 response, err := client.Chat(
     messages,
     gigachat.WithModel(gigachat.GigaChat2Pro),
 )
 
-// Get list of available models
+// Получение списка доступных моделей
 generationModels := gigachat.GetGenerationModels()
 embeddingModels := gigachat.GetEmbeddingModels()
 
-// Check model validity
+// Проверка валидности модели
 if gigachat.IsValidGenerationModel(gigachat.GigaChat2) {
-    // Model is valid for generation
+    // Модель валидна для генерации
 }
 ```
 
-## 🔧 Generation Parameters
+## 🔧 Параметры генерации
 
-Available parameters for customizing generation:
+Доступные параметры для настройки генерации:
 
 ```go
 response, err := client.Chat(
     messages,
-    gigachat.WithModel(gigachat.GigaChat2Pro),      // Model to use
-    gigachat.WithTemperature(0.7),                   // Creativity (0.0 - 2.0)
+    gigachat.WithModel(gigachat.GigaChat2Pro),      // Модель для использования
+    gigachat.WithTemperature(0.7),                   // Креативность (0.0 - 2.0)
     gigachat.WithTopP(0.9),                          // Nucleus sampling (0.0 - 1.0)
-    gigachat.WithMaxTokens(1000),                    // Maximum tokens
-    gigachat.WithRepetitionPenalty(1.1),             // Repetition penalty (0.0 - 2.0)
-    gigachat.WithUpdateInterval(0),                  // Update interval for streaming
+    gigachat.WithMaxTokens(1000),                    // Максимальное количество токенов
+    gigachat.WithRepetitionPenalty(1.1),             // Штраф за повторения (0.0 - 2.0)
+    gigachat.WithUpdateInterval(0),                  // Интервал обновления для streaming
 )
 ```
 
-## 🎨 Image Generation
+## 🎨 Генерация изображений
 
-GigaChat supports image generation using the built-in text2image function. To create images, use the verb "нарисуй" (
-draw) in the prompt and the `function_call: auto` parameter.
+GigaChat поддерживает генерацию изображений с помощью встроенной функции text2image. Для создания изображений
+используйте глагол "нарисуй" в промпте и параметр `function_call: auto`.
 
-### Basic Usage
+### Базовое использование
 
 ```go
-// Simple image generation
+// Простая генерация изображения
 result, err := client.CreateImage("Нарисуй красивый закат над морем")
 if err != nil {
     log.Fatal(err)
 }
 
-fmt.Printf("Image generated! File ID: %s\n", result.FileID)
+fmt.Printf("Изображение создано! File ID: %s\n", result.FileID)
 
-// Decode and save image
+// Декодирование и сохранение изображения
 imageData, err := base64.StdEncoding.DecodeString(result.Content)
 if err != nil {
     log.Fatal(err)
@@ -302,19 +303,19 @@ if err != nil {
     log.Fatal(err)
 }
 
-fmt.Println("Image saved to sunset.jpg")
+fmt.Println("Изображение сохранено в sunset.jpg")
 ```
 
-### Generation with System Prompt (Styling)
+### Генерация с системным промптом (стилизация)
 
 ```go
-// Generate in the style of a specific artist
+// Генерация в стиле конкретного художника
 result, err := client.CreateImage(
     "Нарисуй розового кота",
     gigachat.WithSystemMessage("Ты — Василий Кандинский"),
 )
 
-// Generate in a specific style
+// Генерация в определенном стиле
 result, err := client.CreateImage(
     "Нарисуй космический корабль",
     gigachat.WithSystemMessage("Ты — художник-концептуалист научной фантастики"),
@@ -322,39 +323,39 @@ result, err := client.CreateImage(
 )
 ```
 
-### Separate Generation and Download
+### Раздельная генерация и скачивание
 
 ```go
-// Generate image (returns response with image ID)
+// Генерация изображения (возвращает ответ с ID изображения)
 response, err := client.GenerateImage("Нарисуй футуристический город")
 if err != nil {
     log.Fatal(err)
 }
 
-// Extract image ID from response
+// Извлечение ID изображения из ответа
 content := response.Choices[0].Message.Content
-// Response contains: <img src="file-id" fuse="true"/>
+// Ответ содержит: <img src="file-id" fuse="true"/>
 
-// Download image separately
+// Отдельное скачивание изображения
 imageData, err := client.DownloadImage(fileID)
 if err != nil {
     log.Fatal(err)
 }
 
-// Save file
+// Сохранение файла
 decodedData, _ := base64.StdEncoding.DecodeString(imageData)
 os.WriteFile("city.jpg", decodedData, 0644)
 ```
 
-### Available Image Methods
+### Доступные методы для работы с изображениями
 
-| Method                              | Description                               | Returns           |
-|-------------------------------------|-------------------------------------------|-------------------|
-| `GenerateImage(prompt, options...)` | Generates image and returns API response  | `*ChatResponse`   |
-| `DownloadImage(fileID)`             | Downloads image by ID                     | `string` (base64) |
-| `CreateImage(prompt, options...)`   | Generates and downloads image in one call | `*ImageResult`    |
+| Метод                               | Описание                                          | Возвращает        |
+|-------------------------------------|---------------------------------------------------|-------------------|
+| `GenerateImage(prompt, options...)` | Генерирует изображение и возвращает ответ API     | `*ChatResponse`   |
+| `DownloadImage(fileID)`             | Скачивает изображение по ID                       | `string` (base64) |
+| `CreateImage(prompt, options...)`   | Генерирует и скачивает изображение в одном вызове | `*ImageResult`    |
 
-### Image Generation Options
+### Опции генерации изображений
 
 ```go
 result, err := client.CreateImage(
@@ -365,36 +366,36 @@ result, err := client.CreateImage(
 )
 ```
 
-### Error Handling for Image Generation
+### Обработка ошибок при генерации изображений
 
 ```go
 result, err := client.CreateImage("Нарисуй дракона")
 if err != nil {
     switch e := err.(type) {
     case *gigachat.ValidationError:
-        fmt.Printf("Validation error: %v\n", e)
+        fmt.Printf("Ошибка валидации: %v\n", e)
     case *gigachat.GigaChatError:
-        fmt.Printf("GigaChat API error (code %d): %v\n", e.Code, e)
+        fmt.Printf("Ошибка GigaChat API (код %d): %v\n", e.Code, e)
     case *gigachat.AuthenticationError:
-        fmt.Printf("Authentication error: %v\n", e)
+        fmt.Printf("Ошибка аутентификации: %v\n", e)
     default:
-        fmt.Printf("Unknown error: %v\n", err)
+        fmt.Printf("Неизвестная ошибка: %v\n", err)
     }
     return
 }
 
-fmt.Printf("Image saved with ID: %s\n", result.FileID)
+fmt.Printf("Изображение сохранено с ID: %s\n", result.FileID)
 ```
 
-### Example Prompts for Generation
+### Примеры промптов для генерации
 
 ```go
-// Good prompts (contain "нарисуй")
+// Хорошие промпты (содержат "нарисуй")
 client.CreateImage("Нарисуй закат в горах")
 client.CreateImage("Нарисуй портрет кота в стиле ренессанса")
 client.CreateImage("Нарисуй абстрактную композицию")
 
-// Styling via system_message
+// Стилизация через system_message
 client.CreateImage(
     "Нарисуй цветы",
     gigachat.WithSystemMessage("Ты — Клод Моне, рисуешь в стиле импрессионизма"),
@@ -406,93 +407,47 @@ client.CreateImage(
 )
 ```
 
-> **Important**: For image generation, the prompt must contain the verb "нарисуй" (draw) or similar drawing commands.
-> The API automatically determines the need to call the text2image function when the `function_call: auto` parameter is
-> present.
+> **Важно**: Для генерации изображений промпт должен содержать глагол "нарисуй" или аналогичные команды рисования. API
+> автоматически определяет необходимость вызова функции text2image при наличии параметра `function_call: auto`.
 
-## ⚠️ Error Handling
+## ⚠️ Обработка ошибок
 
-The SDK provides specialized error types for different error scenarios:
+SDK предоставляет специализированные типы ошибок для различных сценариев:
 
 ```go
 response, err := client.Chat(messages)
 if err != nil {
     switch e := err.(type) {
     case *gigachat.AuthenticationError:
-        // Authentication errors (invalid keys, expired token)
-        fmt.Printf("Authentication error: %v\n", e)
+        // Ошибки авторизации (неверные ключи, истекший токен)
+        fmt.Printf("Ошибка авторизации: %v\n", e)
     case *gigachat.ValidationError:
-        // Validation errors (invalid message format)
-        fmt.Printf("Validation error: %v\n", e)
+        // Ошибки валидации (неверный формат сообщений)
+        fmt.Printf("Ошибка валидации: %v\n", e)
     case *gigachat.GigaChatError:
-        // General GigaChat API errors
-        fmt.Printf("GigaChat error (code %d): %v\n", e.Code, e)
+        // Общие ошибки GigaChat API
+        fmt.Printf("Ошибка GigaChat (код %d): %v\n", e.Code, e)
     default:
-        fmt.Printf("Unknown error: %v\n", err)
+        fmt.Printf("Неизвестная ошибка: %v\n", err)
     }
     return
 }
 ```
 
-### GigaChat API Error Codes
+> 📖 **Подробнее об ошибках
+**: [Официальная документация GigaChat API](https://developers.sber.ru/docs/ru/gigachat/api/errors-description)
 
-#### 🔐 Authentication Errors (400-401)
+## 📚 Примеры
 
-| Code | HTTP | Description                                       | Solution                                                                       |
-|------|------|---------------------------------------------------|--------------------------------------------------------------------------------|
-| 1    | 400  | `scope data format invalid`                       | Check scope field format                                                       |
-| 4    | 401  | `Can't decode 'Authorization' header`             | Check authorization key correctness                                            |
-| 5    | 400  | `scope is empty`                                  | Specify scope: `GIGACHAT_API_PERS`, `GIGACHAT_API_B2B`, or `GIGACHAT_API_CORP` |
-| 6    | 401  | `credentials doesn't match db data`               | Reissue authorization key in personal account                                  |
-| 7    | 401  | `scope from db not fully includes consumed scope` | Specify correct API version in scope                                           |
+Репозиторий включает полные примеры:
 
-#### 💳 Limit and Access Errors (402-403)
+- **[Базовое использование](examples/basic/main.go)** - Простой чат и список моделей
+- **[Streaming](examples/streaming/main.go)** - Потоковые ответы в реальном времени
+- **[Генерация изображений](examples/image_generation/main.go)** - Генерация и сохранение изображений
+- **[Диалоги](examples/conversation/main.go)** - Многоходовые диалоги
+- **[Продвинутое](examples/advanced/main.go)** - Продвинутая настройка и опции
 
-| HTTP | Description         | Cause                  | Solution                              |
-|------|---------------------|------------------------|---------------------------------------|
-| 402  | `Payment Required`  | Model tokens exhausted | Check token limit in personal account |
-| 403  | `Permission denied` | No access to method    | Check tariff plan                     |
-
-#### 📊 Data Size Errors (413)
-
-| HTTP | Description         | Cause                    | Solution                   |
-|------|---------------------|--------------------------|----------------------------|
-| 413  | `Payload too large` | Input data size exceeded | Reduce prompt or file size |
-
-#### ⚙️ Parameter Errors (422)
-
-| HTTP | Description                                  | Cause                           | Solution                                 |
-|------|----------------------------------------------|---------------------------------|------------------------------------------|
-| 422  | `Requested model does not support functions` | Model doesn't support functions | Use different model or disable functions |
-| 422  | `system message must be the first message`   | Incorrect message order         | System message must be first             |
-| 422  | `Unprocessable Entity`                       | File exceeds context size       | Split or reduce file                     |
-
-#### 🚦 Request Limit Errors (429)
-
-| HTTP | Description         | Cause                             | Solution                             |
-|------|---------------------|-----------------------------------|--------------------------------------|
-| 429  | `Too Many Requests` | Concurrent request limit exceeded | Reduce request frequency, add delays |
-
-#### 🔧 Server Errors (500)
-
-| HTTP | Description             | Cause                  | Solution        |
-|------|-------------------------|------------------------|-----------------|
-| 500  | `Internal Server Error` | GigaChat service error | Contact support |
-
-> 📖 **More about errors
-**: [Official GigaChat API Documentation](https://developers.sber.ru/docs/ru/gigachat/api/errors-description)
-
-## 📚 Examples
-
-The repository includes comprehensive examples:
-
-- **[Basic Usage](examples/basic/main.go)** - Simple chat and model listing
-- **[Streaming](examples/streaming/main.go)** - Real-time streaming responses
-- **[Image Generation](examples/image_generation/main.go)** - Generate and save images
-- **[Conversation](examples/conversation/main.go)** - Multi-turn conversations
-- **[Advanced](examples/advanced/main.go)** - Advanced configuration and options
-
-Run examples:
+Запуск примеров:
 
 ```bash
 cd examples/basic
@@ -505,85 +460,85 @@ cd ../image_generation
 go run main.go
 ```
 
-## 🔧 Configuration Options
+## 🔧 Опции конфигурации
 
-### Token Manager Options
+### Опции менеджера токенов
 
 ```go
 tokenManager := gigachat.NewTokenManager(
     authKey,
-    gigachat.WithScope("GIGACHAT_API_PERS"),           // API scope
-    gigachat.WithOAuthURI("https://..."),              // Custom OAuth URI
-    gigachat.WithInsecureSkipVerify(true),             // Skip SSL verification
-    gigachat.WithHTTPClient(customHTTPClient),         // Custom HTTP client
+    gigachat.WithScope("GIGACHAT_API_PERS"),           // Scope API
+    gigachat.WithOAuthURI("https://..."),              // Пользовательский OAuth URI
+    gigachat.WithInsecureSkipVerify(true),             // Пропустить проверку SSL
+    gigachat.WithHTTPClient(customHTTPClient),         // Пользовательский HTTP клиент
 )
 ```
 
-### Client Options
+### Опции клиента
 
 ```go
 client := gigachat.NewClient(
     tokenManager,
-    gigachat.WithBaseURI("https://..."),               // Custom base URI
-    gigachat.WithDefaultModel(gigachat.GigaChat2Pro),  // Default model
-    gigachat.WithClientInsecureSkipVerify(true),       // Skip SSL verification
-    gigachat.WithHTTPClient(customHTTPClient),         // Custom HTTP client
+    gigachat.WithBaseURI("https://..."),               // Пользовательский base URI
+    gigachat.WithDefaultModel(gigachat.GigaChat2Pro),  // Модель по умолчанию
+    gigachat.WithClientInsecureSkipVerify(true),       // Пропустить проверку SSL
+    gigachat.WithHTTPClient(customHTTPClient),         // Пользовательский HTTP клиент
 )
 ```
 
-## 🧪 Testing
+## 🧪 Тестирование
 
 ```bash
-# Run tests
+# Запуск тестов
 go test -v ./...
 
-# Run tests with coverage
+# Запуск тестов с покрытием
 go test -v -cover ./...
 
-# Generate coverage report
+# Генерация отчета о покрытии
 go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out
 ```
 
-## 📖 Documentation
+## 📖 Документация
 
-- [Official GigaChat API Documentation](https://developers.sber.ru/docs/ru/gigachat/api/overview)
-- [GigaChat Models](https://developers.sber.ru/docs/ru/gigachat/models)
-- [API Reference](https://developers.sber.ru/docs/ru/gigachat/api/reference)
-- [Error Codes](https://developers.sber.ru/docs/ru/gigachat/api/errors-description)
-- [Quick Start Guide](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-create-project)
+- [Официальная документация GigaChat API](https://developers.sber.ru/docs/ru/gigachat/api/overview)
+- [Модели GigaChat](https://developers.sber.ru/docs/ru/gigachat/models)
+- [Справочник API](https://developers.sber.ru/docs/ru/gigachat/api/reference)
+- [Коды ошибок](https://developers.sber.ru/docs/ru/gigachat/api/errors-description)
+- [Руководство по быстрому старту](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-create-project)
 
-## 🤝 Contributing
+## 🤝 Вклад в проект
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Вклад приветствуется! Пожалуйста, не стесняйтесь отправлять Pull Request.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Сделайте Fork репозитория
+2. Создайте ветку для новой функции (`git checkout -b feature/amazing-feature`)
+3. Зафиксируйте изменения (`git commit -m 'Add some amazing feature'`)
+4. Отправьте в ветку (`git push origin feature/amazing-feature`)
+5. Откройте Pull Request
 
-## 📝 License
+## 📝 Лицензия
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Этот проект лицензирован под лицензией MIT - см. файл [LICENSE](LICENSE) для деталей.
 
-## 👤 Author
+## 👤 Автор
 
 **Igor Sazonov**
 
 - GitHub: [@tigusigalpa](https://github.com/tigusigalpa)
 - Email: sovletig@gmail.com
 
-## 🙏 Acknowledgments
+## 🙏 Благодарности
 
-- [Sber GigaChat](https://developers.sber.ru/docs/ru/gigachat/api/overview) for the amazing AI API
-- The Go community for excellent tools and libraries
+- [Sber GigaChat](https://developers.sber.ru/docs/ru/gigachat/api/overview) за потрясающий AI API
+- Сообществу Go за отличные инструменты и библиотеки
 
-## 📊 Project Status
+## 📊 Статус проекта
 
-This project is actively maintained. If you encounter any issues or have suggestions,
-please [open an issue](https://github.com/tigusigalpa/gigachat-go/issues).
+Проект активно поддерживается. Если вы столкнулись с проблемами или у вас есть предложения,
+пожалуйста, [откройте issue](https://github.com/tigusigalpa/gigachat-go/issues).
 
 ---
 
-Made with ❤️ by [Igor Sazonov](https://github.com/tigusigalpa)
+Сделано с ❤️ [Igor Sazonov](https://github.com/tigusigalpa)
