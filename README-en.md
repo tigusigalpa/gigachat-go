@@ -13,6 +13,51 @@ GigaChat AI models, including streaming support and image generation.
 
 **📦 Package:** [pkg.go.dev/github.com/tigusigalpa/gigachat-go](https://pkg.go.dev/github.com/tigusigalpa/gigachat-go)
 
+## 📖 About the Project
+
+**GigaChat Go SDK** is a professional library for integrating Sber's Russian neural network GigaChat into your Go applications. The library provides a complete set of tools for working with artificial intelligence: from simple chatbots to complex content and image generation systems.
+
+### Why GigaChat Go SDK?
+
+- **🇷🇺 Russian Development**: Works with the domestic GigaChat neural network, important for import substitution
+- **⚡ High Performance**: Optimized for handling large data volumes and streaming
+- **🔒 Security**: Built-in token management and automatic rotation with thread-safe caching
+- **📦 Production Ready**: Complete error handling, type safety, and comprehensive testing
+- **🎯 Easy to Use**: Intuitive API with functional options pattern
+- **📚 Excellent Documentation**: Detailed examples for all use cases
+
+### Main Use Cases
+
+#### 🤖 Chatbots and Virtual Assistants
+Create intelligent assistants for Telegram, Discord, Slack, and other platforms. The SDK supports contextual dialogues, allowing bots to remember previous messages and conduct meaningful conversations.
+
+#### 📝 Content Generation
+Automate text creation: blog articles, product descriptions, email campaigns, social media posts. GigaChat can generate content in Russian considering context and style.
+
+#### 🎨 Image Creation
+Generate unique images from text descriptions for marketing, design, and illustrations. Styling support allows creating images in the style of specific artists or art movements.
+
+#### 💼 Business Analytics
+Analyze documents, extract insights, summarize large volumes of text. Use for processing customer reviews, competitor analysis, and report preparation.
+
+#### 🔍 Semantic Search
+Build semantic search systems using embeddings. Find relevant documents even with different query formulations.
+
+#### 🎓 Educational Platforms
+Develop interactive learning systems, personalized tutors, and AI-powered knowledge assessment systems.
+
+### Advantages Over Alternatives
+
+| Feature | GigaChat Go SDK | Other Solutions |
+|---------|-----------------|-----------------|
+| Russian Language | ✅ Native support | ⚠️ Limited |
+| Streaming | ✅ Full support | ⚠️ Partial |
+| Image Generation | ✅ Built-in | ❌ Requires additional API |
+| Token Management | ✅ Automatic | ⚠️ Manual |
+| Type Safety | ✅ Complete | ⚠️ Partial |
+| Documentation | ✅ Detailed in Russian | ⚠️ English only |
+| Code Examples | ✅ For all features | ⚠️ Basic only |
+
 ## ✨ Features
 
 - 🔌 **Simple Integration** with GigaChat API
@@ -553,6 +598,403 @@ go tool cover -html=coverage.out
 - [Error Codes](https://developers.sber.ru/docs/ru/gigachat/api/errors-description)
 - [Quick Start Guide](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-create-project)
 
+## 🏗️ SDK Architecture
+
+### Core Components
+
+#### TokenManager
+Manages OAuth authentication and token lifecycle:
+- Automatic access token retrieval via OAuth 2.0
+- Thread-safe token caching
+- Automatic refresh on expiration
+- Support for custom HTTP clients for proxies and special configurations
+
+#### Client
+Main interface for interacting with GigaChat API:
+- Methods for chat, streaming, and image generation
+- Model and generation parameter management
+- Built-in error handling with typed exceptions
+- Support for functional options for flexible configuration
+
+#### Models
+Type-safe data structures:
+- Constants for all available models
+- Request parameter validation
+- API response structures
+- Helpers for working with messages and dialogues
+
+### Data Flow
+
+```
+Application → Client → TokenManager → OAuth Server
+                ↓
+           GigaChat API
+                ↓
+           Response → Client → Application
+```
+
+## 💡 Best Practices
+
+### Managing Dialogue Context
+
+```go
+// Limit history size to save tokens
+const maxHistoryMessages = 10
+
+func trimHistory(messages []gigachat.Message) []gigachat.Message {
+    if len(messages) <= maxHistoryMessages {
+        return messages
+    }
+    // Keep system message (if any) and last N messages
+    systemMsg := []gigachat.Message{}
+    if messages[0].Role == "system" {
+        systemMsg = messages[:1]
+        messages = messages[1:]
+    }
+    return append(systemMsg, messages[len(messages)-maxHistoryMessages:]...)
+}
+```
+
+### Handling Rate Limits
+
+```go
+import "time"
+
+func chatWithRetry(client *gigachat.Client, messages []gigachat.Message, maxRetries int) (*gigachat.ChatResponse, error) {
+    var response *gigachat.ChatResponse
+    var err error
+    
+    for i := 0; i < maxRetries; i++ {
+        response, err = client.Chat(messages)
+        if err == nil {
+            return response, nil
+        }
+        
+        if gigachatErr, ok := err.(*gigachat.GigaChatError); ok {
+            if gigachatErr.Code == 429 {
+                // Exponential backoff on rate limit
+                backoff := time.Duration(1<<uint(i)) * time.Second
+                time.Sleep(backoff)
+                continue
+            }
+        }
+        return nil, err
+    }
+    return nil, err
+}
+```
+
+### Optimizing Token Usage
+
+```go
+// Use max_tokens parameter to control costs
+response, err := client.Chat(
+    messages,
+    gigachat.WithMaxTokens(500),  // Limit response length
+    gigachat.WithTemperature(0.3), // Less creativity = fewer tokens
+)
+
+// Monitor token usage
+if err == nil {
+    log.Printf("Tokens used: %d (prompt: %d, completion: %d)",
+        response.Usage.TotalTokens,
+        response.Usage.PromptTokens,
+        response.Usage.CompletionTokens,
+    )
+}
+```
+
+### Secure Credential Storage
+
+```go
+// ❌ Bad: hardcoded in code
+authKey := "hardcoded_key_here"
+
+// ✅ Good: using environment variables
+authKey := os.Getenv("GIGACHAT_AUTH_KEY")
+if authKey == "" {
+    log.Fatal("GIGACHAT_AUTH_KEY not set")
+}
+
+// ✅ Even better: using secret managers
+// E.g., HashiCorp Vault, AWS Secrets Manager, etc.
+```
+
+### Graceful Shutdown for Streaming
+
+```go
+ctx, cancel := context.WithCancel(context.Background())
+defer cancel()
+
+go func() {
+    sigChan := make(chan os.Signal, 1)
+    signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+    <-sigChan
+    cancel()
+}()
+
+err := client.ChatStream(messages, func(event *gigachat.ChatResponse, done bool, err error) {
+    select {
+    case <-ctx.Done():
+        return
+    default:
+        // Process event
+    }
+})
+```
+
+## 🔍 Troubleshooting
+
+### Issue: Authentication Error
+
+**Symptoms:**
+```
+Authentication error: Can't decode 'Authorization' header
+```
+
+**Solution:**
+1. Check Authorization Key format correctness (must be Base64)
+2. Ensure you're using correct Client ID and Client Secret
+3. Verify keys don't contain extra spaces or characters
+
+```go
+// Correct auth key creation
+authKey := base64.StdEncoding.EncodeToString(
+    []byte(strings.TrimSpace(clientID) + ":" + strings.TrimSpace(clientSecret)),
+)
+```
+
+### Issue: SSL/TLS Errors
+
+**Symptoms:**
+```
+x509: certificate signed by unknown authority
+```
+
+**Solution:**
+```go
+// For development (NOT for production!)
+tokenManager := gigachat.NewTokenManager(
+    authKey,
+    gigachat.WithInsecureSkipVerify(true),
+)
+
+// For production: install correct certificates
+```
+
+### Issue: Token Limit Exceeded
+
+**Symptoms:**
+```
+HTTP 402: Payment Required
+```
+
+**Solution:**
+1. Check token balance in personal account
+2. Optimize prompts to reduce consumption
+3. Use `max_tokens` parameter to limit responses
+4. Consider upgrading to a higher pricing plan
+
+### Issue: Slow Responses
+
+**Solution:**
+1. Use streaming for large responses
+2. Choose appropriate model (GigaChat-2 is faster than GigaChat-2-Max)
+3. Reduce prompt size and dialogue history
+4. Check network connection
+
+```go
+// Use streaming for long responses
+err := client.ChatStream(messages, func(event *gigachat.ChatResponse, done bool, err error) {
+    // Receive response parts as they're generated
+})
+```
+
+## ❓ Frequently Asked Questions (FAQ)
+
+### Which model is best for my task?
+
+- **GigaChat-2**: Suitable for simple dialogues, FAQ bots, basic text generation
+- **GigaChat-2-Pro**: Optimal for complex tasks, creative writing, text analysis
+- **GigaChat-2-Max**: Use for professional tasks requiring maximum accuracy
+
+### Can I use the SDK in production?
+
+Yes, the SDK is designed with production requirements in mind:
+- Complete error handling
+- Thread safety
+- Automatic token management
+- Comprehensive testing
+
+### How to limit token consumption?
+
+```go
+response, err := client.Chat(
+    messages,
+    gigachat.WithMaxTokens(500),      // Maximum tokens in response
+    gigachat.WithTemperature(0.3),    // Less variability
+)
+```
+
+### Is proxy support available?
+
+Yes, use a custom HTTP client:
+
+```go
+proxyURL, _ := url.Parse("http://proxy:8080")
+httpClient := &http.Client{
+    Transport: &http.Transport{
+        Proxy: http.ProxyURL(proxyURL),
+    },
+}
+
+tokenManager := gigachat.NewTokenManager(
+    authKey,
+    gigachat.WithHTTPClient(httpClient),
+)
+```
+
+### How to handle large files?
+
+Split files into chunks and process sequentially:
+
+```go
+const chunkSize = 4000 // characters
+
+func processLargeText(client *gigachat.Client, text string) ([]string, error) {
+    var results []string
+    
+    for i := 0; i < len(text); i += chunkSize {
+        end := i + chunkSize
+        if end > len(text) {
+            end = len(text)
+        }
+        
+        chunk := text[i:end]
+        messages := []gigachat.Message{
+            {Role: "user", Content: "Summarize text: " + chunk},
+        }
+        
+        response, err := client.Chat(messages)
+        if err != nil {
+            return nil, err
+        }
+        
+        results = append(results, gigachat.ExtractContent(response))
+    }
+    
+    return results, nil
+}
+```
+
+### Can I use multiple models simultaneously?
+
+Yes, create multiple clients or use options:
+
+```go
+// Option 1: Different clients
+client1 := gigachat.NewClient(tm, gigachat.WithDefaultModel(gigachat.GigaChat2))
+client2 := gigachat.NewClient(tm, gigachat.WithDefaultModel(gigachat.GigaChat2Pro))
+
+// Option 2: One client with options
+response1, _ := client.Chat(messages, gigachat.WithModel(gigachat.GigaChat2))
+response2, _ := client.Chat(messages, gigachat.WithModel(gigachat.GigaChat2Pro))
+```
+
+## 🚀 Performance and Scaling
+
+### Parallel Request Processing
+
+```go
+func processParallel(client *gigachat.Client, prompts []string) []string {
+    results := make([]string, len(prompts))
+    var wg sync.WaitGroup
+    
+    for i, prompt := range prompts {
+        wg.Add(1)
+        go func(idx int, p string) {
+            defer wg.Done()
+            
+            messages := []gigachat.Message{{Role: "user", Content: p}}
+            response, err := client.Chat(messages)
+            if err != nil {
+                log.Printf("Error for prompt %d: %v", idx, err)
+                return
+            }
+            results[idx] = gigachat.ExtractContent(response)
+        }(i, prompt)
+    }
+    
+    wg.Wait()
+    return results
+}
+```
+
+### Connection Pool
+
+```go
+// Configure HTTP client with connection pool
+httpClient := &http.Client{
+    Transport: &http.Transport{
+        MaxIdleConns:        100,
+        MaxIdleConnsPerHost: 10,
+        IdleConnTimeout:     90 * time.Second,
+    },
+    Timeout: 30 * time.Second,
+}
+
+tokenManager := gigachat.NewTokenManager(
+    authKey,
+    gigachat.WithHTTPClient(httpClient),
+)
+```
+
+## 🔐 Security
+
+### Security Recommendations
+
+1. **Never commit credentials to Git**
+   ```bash
+   # Add to .gitignore
+   .env
+   *.key
+   credentials.json
+   ```
+
+2. **Use environment variables**
+   ```go
+   authKey := os.Getenv("GIGACHAT_AUTH_KEY")
+   ```
+
+3. **Key rotation**
+   Regularly update Client ID and Client Secret in personal account
+
+4. **User input validation**
+   ```go
+   func sanitizeInput(input string) string {
+       // Remove potentially dangerous characters
+       input = strings.TrimSpace(input)
+       if len(input) > 10000 {
+           input = input[:10000]
+       }
+       return input
+   }
+   ```
+
+5. **Application-side rate limiting**
+   ```go
+   import "golang.org/x/time/rate"
+   
+   limiter := rate.NewLimiter(rate.Every(time.Second), 5) // 5 requests per second
+   
+   func rateLimitedChat(client *gigachat.Client, messages []gigachat.Message) (*gigachat.ChatResponse, error) {
+       if err := limiter.Wait(context.Background()); err != nil {
+           return nil, err
+       }
+       return client.Chat(messages)
+   }
+   ```
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -562,6 +1004,14 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
+
+### Contributor Guidelines
+
+- Follow the project's code style (use `gofmt`)
+- Add tests for new functionality
+- Update documentation when changing API
+- Write clear commit messages
+- Ensure all tests pass before PR
 
 ## 📝 License
 
@@ -583,7 +1033,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 This project is actively maintained. If you encounter any issues or have suggestions,
 please [open an issue](https://github.com/tigusigalpa/gigachat-go/issues).
-
----
-
-Made with ❤️ by [Igor Sazonov](https://github.com/tigusigalpa)
