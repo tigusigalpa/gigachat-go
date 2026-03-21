@@ -1,96 +1,78 @@
-# 🚀 GigaChat Go SDK
+# GigaChat Go SDK
 
-![GigaChat Golang SDK](https://github.com/user-attachments/assets/5cc6724d-fd74-4908-ba5d-4e473bd6e885)
+![GigaChat Golang SDK](https://i.postimg.cc/YCWrRjhK/528512211-5cc6724d-fd74-4908-ba5d-4e473bd6e885.jpg)
 
 ![Go Version](https://img.shields.io/badge/Go-1.21+-00ADD8?style=flat-square&logo=go)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/tigusigalpa/gigachat-go?style=flat-square)](https://goreportcard.com/report/github.com/tigusigalpa/gigachat-go)
 
-Full-featured Golang SDK for Sber GigaChat API integration. Simple, powerful, and idiomatic Go client for working with
-GigaChat AI models, including streaming support and image generation.
+Golang SDK for Sber GigaChat API. Supports streaming, image generation, and conversations.
 
 **🌐 Language:** English | [Русский](README.md)
 
 **📦 Package:** [pkg.go.dev/github.com/tigusigalpa/gigachat-go](https://pkg.go.dev/github.com/tigusigalpa/gigachat-go)
 
-## 📖 About the Project
+## About
 
-**GigaChat Go SDK** is a professional library for integrating Sber's Russian neural network GigaChat into your Go applications. The library provides a complete set of tools for working with artificial intelligence: from simple chatbots to complex content and image generation systems.
+Library for integrating GigaChat into Go applications. Suitable for chatbots, content generation, and image creation.
 
-### Why GigaChat Go SDK?
+### Why this SDK?
 
-- **🇷🇺 Russian Development**: Works with the domestic GigaChat neural network, important for import substitution
-- **⚡ High Performance**: Optimized for handling large data volumes and streaming
-- **🔒 Security**: Built-in token management and automatic rotation with thread-safe caching
-- **📦 Production Ready**: Complete error handling, type safety, and comprehensive testing
-- **🎯 Easy to Use**: Intuitive API with functional options pattern
-- **📚 Excellent Documentation**: Detailed examples for all use cases
+- Works with Sber's GigaChat
+- Streaming and large data support
+- Automatic token management with thread-safe cache
+- Error handling and type safety
+- Functional options for configuration
 
-### Main Use Cases
+### Use Cases
 
-#### 🤖 Chatbots and Virtual Assistants
-Create intelligent assistants for Telegram, Discord, Slack, and other platforms. The SDK supports contextual dialogues, allowing bots to remember previous messages and conduct meaningful conversations.
+- **Chatbots** — Telegram, Discord, Slack. SDK maintains conversation context.
+- **Text generation** — articles, product descriptions, newsletters.
+- **Images** — generation from descriptions, artist styling.
+- **Analytics** — document summarization, review processing.
+- **Search** — semantic search via embeddings.
+- **Education** — interactive systems, knowledge testing.
 
-#### 📝 Content Generation
-Automate text creation: blog articles, product descriptions, email campaigns, social media posts. GigaChat can generate content in Russian considering context and style.
+### Comparison
 
-#### 🎨 Image Creation
-Generate unique images from text descriptions for marketing, design, and illustrations. Styling support allows creating images in the style of specific artists or art movements.
+| Feature | GigaChat Go SDK | Alternatives |
+|---------|-----------------|------------------|
+| Russian Language | Native | Limited |
+| Streaming | Yes | Partial |
+| Image Generation | Built-in | Separate API |
+| Token Management | Automatic | Manual |
+| Type Safety | Yes | Partial |
 
-#### 💼 Business Analytics
-Analyze documents, extract insights, summarize large volumes of text. Use for processing customer reviews, competitor analysis, and report preparation.
+## Features
 
-#### 🔍 Semantic Search
-Build semantic search systems using embeddings. Find relevant documents even with different query formulations.
+- GigaChat API integration
+- Automatic OAuth token management (thread-safe cache)
+- All models: GigaChat-2, GigaChat-2-Pro, GigaChat-2-Max
+- Conversations with context
+- Streaming responses
+- Image generation (text2image)
+- Image download in base64
+- Styling via system prompts
+- Functional options
+- Type safety and error handling
 
-#### 🎓 Educational Platforms
-Develop interactive learning systems, personalized tutors, and AI-powered knowledge assessment systems.
-
-### Advantages Over Alternatives
-
-| Feature | GigaChat Go SDK | Other Solutions |
-|---------|-----------------|-----------------|
-| Russian Language | ✅ Native support | ⚠️ Limited |
-| Streaming | ✅ Full support | ⚠️ Partial |
-| Image Generation | ✅ Built-in | ❌ Requires additional API |
-| Token Management | ✅ Automatic | ⚠️ Manual |
-| Type Safety | ✅ Complete | ⚠️ Partial |
-| Documentation | ✅ Detailed in Russian | ⚠️ English only |
-| Code Examples | ✅ For all features | ⚠️ Basic only |
-
-## ✨ Features
-
-- 🔌 **Simple Integration** with GigaChat API
-- 🔐 **Automatic OAuth & Token Management** with thread-safe caching
-- 🎯 **Support for All Models** (GigaChat-2, GigaChat-2-Pro, GigaChat-2-Max)
-- 📝 **Conversation Support** with context management
-- ⚡ **Streaming Support** for real-time responses
-- 🎨 **Image Generation** with text2image function
-- 🖼️ **Automatic Image Download** and base64 encoding
-- 🎭 **Image Styling** via system prompts
-- 🔧 **Functional Options Pattern** for clean API
-- 🧪 **Comprehensive Examples** for all features
-- 📚 **Full Documentation** with code samples
-- 🛡️ **Type-Safe** with proper error handling
-
-## 📦 Installation
+## Installation
 
 ```bash
 go get github.com/tigusigalpa/gigachat-go
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 ### 1. Getting Authorization Credentials
 
-To work with GigaChat API, you need to obtain authorization credentials:
+You need API keys:
 
 1. Register at [Sber AI Personal Account](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-create-project)
 2. Create a project and get **Client ID** and **Client Secret**
 3. Generate **Authorization Key** (Base64 of "Client ID:Client Secret")
 
-> 💡 **Detailed Instructions
-**: [Creating a Project and Getting Keys](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-create-project)
+> Details: [Creating a Project and Getting Keys](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-create-project)
 
 ### 2. Environment Setup
 
@@ -108,7 +90,7 @@ export GIGACHAT_CLIENT_SECRET=your_client_secret
 export GIGACHAT_SCOPE=GIGACHAT_API_PERS
 ```
 
-## 💡 Usage
+## Usage
 
 ### Basic Usage
 
@@ -265,10 +247,9 @@ fmt.Println(response.Choices[0].Message.Content)
 fmt.Printf("Tokens used: %d\n", response.Usage.TotalTokens)
 ```
 
-## 🤖 Available Models
+## Available Models
 
-GigaChat supports several models for different tasks. The current list of models is available in
-the [official documentation](https://developers.sber.ru/docs/ru/gigachat/models).
+Current list: [documentation](https://developers.sber.ru/docs/ru/gigachat/models).
 
 ### Text Generation Models
 
@@ -304,9 +285,7 @@ if gigachat.IsValidGenerationModel(gigachat.GigaChat2) {
 }
 ```
 
-## 🔧 Generation Parameters
-
-Available parameters for customizing generation:
+## Generation Parameters
 
 ```go
 response, err := client.Chat(
@@ -320,10 +299,9 @@ response, err := client.Chat(
 )
 ```
 
-## 🎨 Image Generation
+## Image Generation
 
-GigaChat supports image generation using the built-in text2image function. To create images, use the verb "нарисуй" (
-draw) in the prompt and the `function_call: auto` parameter.
+To create images, use the verb "нарисуй" (draw) in the prompt.
 
 ### Basic Usage
 
@@ -451,13 +429,11 @@ client.CreateImage(
 )
 ```
 
-> **Important**: For image generation, the prompt must contain the verb "нарисуй" (draw) or similar drawing commands.
-> The API automatically determines the need to call the text2image function when the `function_call: auto` parameter is
-> present.
+> The prompt must contain "нарисуй" or a similar command. API calls text2image automatically with `function_call: auto`.
 
-## ⚠️ Error Handling
+## Error Handling
 
-The SDK provides specialized error types for different error scenarios:
+SDK provides typed errors:
 
 ```go
 response, err := client.Chat(messages)
@@ -524,12 +500,11 @@ if err != nil {
 |------|-------------------------|------------------------|-----------------|
 | 500  | `Internal Server Error` | GigaChat service error | Contact support |
 
-> 📖 **More about errors
-**: [Official GigaChat API Documentation](https://developers.sber.ru/docs/ru/gigachat/api/errors-description)
+> Details: [GigaChat API Error Codes](https://developers.sber.ru/docs/ru/gigachat/api/errors-description)
 
-## 📚 Examples
+## Examples
 
-The repository includes comprehensive examples:
+Repository includes examples:
 
 - **[Basic Usage](examples/basic/main.go)** - Simple chat and model listing
 - **[Streaming](examples/streaming/main.go)** - Real-time streaming responses
@@ -550,7 +525,7 @@ cd ../image_generation
 go run main.go
 ```
 
-## 🔧 Configuration Options
+## Configuration Options
 
 ### Token Manager Options
 
@@ -576,7 +551,7 @@ client := gigachat.NewClient(
 )
 ```
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run tests
@@ -590,7 +565,7 @@ go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out
 ```
 
-## 📖 Documentation
+## Documentation
 
 - [Official GigaChat API Documentation](https://developers.sber.ru/docs/ru/gigachat/api/overview)
 - [GigaChat Models](https://developers.sber.ru/docs/ru/gigachat/models)
@@ -598,30 +573,30 @@ go tool cover -html=coverage.out
 - [Error Codes](https://developers.sber.ru/docs/ru/gigachat/api/errors-description)
 - [Quick Start Guide](https://developers.sber.ru/docs/ru/gigachat/quickstart/ind-create-project)
 
-## 🏗️ SDK Architecture
+## SDK Architecture
 
-### Core Components
+### Components
 
 #### TokenManager
-Manages OAuth authentication and token lifecycle:
-- Automatic access token retrieval via OAuth 2.0
-- Thread-safe token caching
-- Automatic refresh on expiration
-- Support for custom HTTP clients for proxies and special configurations
+Manages OAuth authentication:
+- Access token retrieval via OAuth 2.0
+- Thread-safe token cache
+- Auto-refresh on expiration
+- Custom HTTP client support
 
 #### Client
-Main interface for interacting with GigaChat API:
-- Methods for chat, streaming, and image generation
-- Model and generation parameter management
-- Built-in error handling with typed exceptions
-- Support for functional options for flexible configuration
+API interface:
+- Chat, streaming, image generation
+- Model and parameter management
+- Typed errors
+- Functional options
 
 #### Models
-Type-safe data structures:
-- Constants for all available models
-- Request parameter validation
+Data structures:
+- Model constants
+- Parameter validation
 - API response structures
-- Helpers for working with messages and dialogues
+- Message helpers
 
 ### Data Flow
 
@@ -633,7 +608,7 @@ Application → Client → TokenManager → OAuth Server
            Response → Client → Application
 ```
 
-## 💡 Best Practices
+## Best Practices
 
 ### Managing Dialogue Context
 
@@ -743,7 +718,7 @@ err := client.ChatStream(messages, func(event *gigachat.ChatResponse, done bool,
 })
 ```
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Issue: Authentication Error
 
@@ -810,7 +785,7 @@ err := client.ChatStream(messages, func(event *gigachat.ChatResponse, done bool,
 })
 ```
 
-## ❓ Frequently Asked Questions (FAQ)
+## FAQ
 
 ### Which model is best for my task?
 
@@ -820,11 +795,11 @@ err := client.ChatStream(messages, func(event *gigachat.ChatResponse, done bool,
 
 ### Can I use the SDK in production?
 
-Yes, the SDK is designed with production requirements in mind:
-- Complete error handling
+Yes:
+- Error handling
 - Thread safety
 - Automatic token management
-- Comprehensive testing
+- Tests
 
 ### How to limit token consumption?
 
@@ -901,7 +876,7 @@ response1, _ := client.Chat(messages, gigachat.WithModel(gigachat.GigaChat2))
 response2, _ := client.Chat(messages, gigachat.WithModel(gigachat.GigaChat2Pro))
 ```
 
-## 🚀 Performance and Scaling
+## Performance
 
 ### Parallel Request Processing
 
@@ -949,9 +924,7 @@ tokenManager := gigachat.NewTokenManager(
 )
 ```
 
-## 🔐 Security
-
-### Security Recommendations
+## Security
 
 1. **Never commit credentials to Git**
    ```bash
@@ -995,9 +968,9 @@ tokenManager := gigachat.NewTokenManager(
    }
    ```
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Pull requests are welcome.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
@@ -1005,31 +978,30 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-### Contributor Guidelines
+### Guidelines
 
-- Follow the project's code style (use `gofmt`)
-- Add tests for new functionality
+- Use `gofmt`
+- Add tests
 - Update documentation when changing API
-- Write clear commit messages
-- Ensure all tests pass before PR
+- Clear commit messages
+- All tests must pass
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👤 Author
+## Author
 
 **Igor Sazonov**
 
 - GitHub: [@tigusigalpa](https://github.com/tigusigalpa)
 - Email: sovletig@gmail.com
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-- [Sber GigaChat](https://developers.sber.ru/docs/ru/gigachat/api/overview) for the amazing AI API
-- The Go community for excellent tools and libraries
+- [Sber GigaChat](https://developers.sber.ru/docs/ru/gigachat/api/overview)
+- Go community
 
-## 📊 Project Status
+## Status
 
-This project is actively maintained. If you encounter any issues or have suggestions,
-please [open an issue](https://github.com/tigusigalpa/gigachat-go/issues).
+Project is maintained. Issues and suggestions — [open an issue](https://github.com/tigusigalpa/gigachat-go/issues).
