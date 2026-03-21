@@ -509,17 +509,48 @@ client := gigachat.NewClient(
 
 ## Тестирование
 
+Библиотека включает комплексный набор unit-тестов для всех основных компонентов.
+
+### Структура тестов
+
+- **`errors_test.go`** - Тесты для пользовательских типов ошибок (`GigaChatError`, `AuthenticationError`, `ValidationError`)
+- **`models_test.go`** - Тесты для моделей данных, констант и JSON сериализации
+- **`token_manager_test.go`** - Тесты управления токенами, кэширования и конкурентного доступа
+- **`client_test.go`** - Тесты для всех методов клиента API с использованием mock HTTP серверов
+
+### Запуск тестов
+
 ```bash
-# Запуск тестов
-go test -v ./...
+# Запуск всех тестов
+go test -v
 
-# Запуск тестов с покрытием
-go test -v -cover ./...
+# Запуск конкретного файла тестов
+go test -v -run TestClient
+go test -v -run TestTokenManager
 
-# Генерация отчета о покрытии
-go test -coverprofile=coverage.out ./...
+# Запуск конкретного теста
+go test -v -run TestClient_Chat
+
+# Запуск с покрытием кода
+go test -cover
+
+# Детальный отчет о покрытии
+go test -coverprofile=coverage.out
 go tool cover -html=coverage.out
+
+# Запуск с race detector
+go test -race -v
 ```
+
+### Покрытие тестами
+
+Тесты покрывают:
+- Все публичные функции и методы
+- Обработку ошибок и граничные случаи
+- Валидацию входных данных
+- Конкурентный доступ к токенам
+- JSON маршалинг/анмаршалинг
+- Mock HTTP серверы для изоляции от реальных API
 
 ## Документация
 

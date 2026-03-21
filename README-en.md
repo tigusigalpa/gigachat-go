@@ -553,17 +553,48 @@ client := gigachat.NewClient(
 
 ## Testing
 
+The library includes a comprehensive set of unit tests for all major components.
+
+### Test Structure
+
+- **`errors_test.go`** - Tests for custom error types (`GigaChatError`, `AuthenticationError`, `ValidationError`)
+- **`models_test.go`** - Tests for data models, constants, and JSON serialization
+- **`token_manager_test.go`** - Tests for token management, caching, and concurrent access
+- **`client_test.go`** - Tests for all API client methods using mock HTTP servers
+
+### Running Tests
+
 ```bash
-# Run tests
-go test -v ./...
+# Run all tests
+go test -v
 
-# Run tests with coverage
-go test -v -cover ./...
+# Run specific test file
+go test -v -run TestClient
+go test -v -run TestTokenManager
 
-# Generate coverage report
-go test -coverprofile=coverage.out ./...
+# Run specific test
+go test -v -run TestClient_Chat
+
+# Run with code coverage
+go test -cover
+
+# Detailed coverage report
+go test -coverprofile=coverage.out
 go tool cover -html=coverage.out
+
+# Run with race detector
+go test -race -v
 ```
+
+### Test Coverage
+
+Tests cover:
+- All public functions and methods
+- Error handling and edge cases
+- Input validation
+- Concurrent token access
+- JSON marshaling/unmarshaling
+- Mock HTTP servers for isolation from real API
 
 ## Documentation
 
