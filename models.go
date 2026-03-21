@@ -72,6 +72,24 @@ type ImageResult struct {
 	Response ChatResponse `json:"response"`
 }
 
+type EmbeddingRequest struct {
+	Model string   `json:"model"`
+	Input []string `json:"input"`
+}
+
+type EmbeddingResult struct {
+	Object    string    `json:"object"`
+	Embedding []float32 `json:"embedding"`
+	Index     int       `json:"index"`
+	Usage     Usage     `json:"usage"`
+}
+
+type EmbeddingResponse struct {
+	Object string            `json:"object"`
+	Data   []EmbeddingResult `json:"data"`
+	Model  string            `json:"model"`
+}
+
 func GetGenerationModels() []string {
 	return []string{
 		GigaChat2,

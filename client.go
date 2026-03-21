@@ -346,6 +346,67 @@ func (c *Client) CreateImage(prompt string, options ...ImageOption) (*ImageResul
 	}, nil
 }
 
+func (c *Client) CreateEmbeddings(prompts []string, options ...EmbeddingOption) (*EmbeddingResponse, error) {
+	if len(prompts) == 0 {
+		return nil, &ValidationError{Message: "no prompts provided"}
+	}
+
+	for i, prompt := range prompts {
+		if strings.TrimSpace(prompt) == "" {
+			return nil, &ValidationError{Message: fmt.Sprintf("prompt #%v is empty", i)}
+		}
+	}
+
+	token, err := c.tokenManager.GetAccessToken()
+	if err != nil {
+		return nil, err
+	}
+
+	request := &EmbeddingRequest{
+		Model: Embeddings,
+		Input: prompts,
+	}
+
+	for _, opt := range options {
+		opt(request)
+	}
+
+	jsonData, err := json.Marshal(request)
+	if err != nil {
+		return nil, &GigaChatError{Message: "failed to marshal request", Err: err}
+	}
+
+	req, err := http.NewRequest("POST", c.baseURI+"/api/v1/embeddings", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, &GigaChatError{Message: "failed to create request", Err: err}
+	}
+
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, &GigaChatError{Message: "request failed", Err: err}
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return nil, &GigaChatError{
+			Message: fmt.Sprintf("API request failed: %s", string(body)),
+			Code:    resp.StatusCode,
+		}
+	}
+
+	var response EmbeddingResponse
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		return nil, &GigaChatError{Message: "failed to decode response", Err: err}
+	}
+
+	return &response, nil
+}
+
 type ChatOption func(*ChatRequest)
 
 func WithModel(model string) ChatOption {
@@ -413,6 +474,14 @@ func WithImageModel(model string) ImageOption {
 func WithImageTemperature(temp float64) ImageOption {
 	return func(io *imageOptions) {
 		io.temperature = &temp
+	}
+}
+
+type EmbeddingOption func(*EmbeddingRequest)
+
+func WithEmbeddingModel(model string) EmbeddingOption {
+	return func(er *EmbeddingRequest) {
+		er.Model = model
 	}
 }
 
